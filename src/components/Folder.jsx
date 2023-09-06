@@ -1,6 +1,6 @@
 import React from "react";
 
-const Folder = ({ data }) => {
+const Folder = ({ name }) => {
   return (
     <div className="flex items-center border rounded-md text-gray-500 py-2 cursor-pointer">
       <div className="border rounded-full p-[4px] bg-gray-200 ml-2">
@@ -22,7 +22,7 @@ const Folder = ({ data }) => {
 
       <div className="ml-3 mr-7 lg:mr-12">
         <h3 className="whitespace-nowrap text-xs lg:text-base font-semibold text-black opacity-85">
-          {data.name}
+          {name}
         </h3>
       </div>
     </div>
