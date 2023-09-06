@@ -1,33 +1,36 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Card from "../../components/Card";
 
-const getData = async () => {
-  try {
-    const res = await fetch("http://3wdz.c.time4vps.cloud:3000/", {
-      cache: "no-cache",
-    });
-
-    if (!res.ok) {
-      return new NextResponse(
-        { message: "Something went wrong!" },
-        { status: 500 }
-      );
-    }
-
-    return res.json();
-  } catch (error) {
-    // console.error(error);
-  }
-};
-
-const page = async () => {
+const Page = () => {
   const router = useRouter();
   const pathname = usePathname().split("/")[1];
   const path = pathname.charAt(0).toUpperCase() + pathname.slice(1);
 
-  const data = await getData();
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    // Fetch data when the component mounts
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://3wdz.c.time4vps.cloud:3000/", {
+          cache: "no-cache",
+        });
+        if (response.ok) {
+          const jsonData = await response.json();
+          setData(jsonData); // Update the data state with the fetched data
+        } else {
+          console.error("Failed to fetch data");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData(); // Call the fetchData function
+  }, []);
+
   const folderData = data.filter((data) => data.name === "Projects");
 
   return (
@@ -53,7 +56,7 @@ const page = async () => {
         </h2>
 
         <div className="flex flex-wrap gap-3">
-          {folderData[0].contents.length > 0 ? (
+          {folderData && folderData[0]?.contents.length > 0 ? (
             folderData[0].contents.map((data) => (
               <Card
                 key={data.id}
@@ -73,4 +76,4 @@ const page = async () => {
   );
 };
 
-export default page;
+export default Page;
